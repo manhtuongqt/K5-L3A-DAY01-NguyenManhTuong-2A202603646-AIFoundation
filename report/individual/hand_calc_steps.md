@@ -1,6 +1,6 @@
-# Các bước tính để tự viết tay
+# Đối chiếu ảnh tính tay
 
-Ảnh `hand_calc.jpg` phải là ảnh giấy do học viên tự viết. Tệp này chỉ ghi các phép tính để đối chiếu.
+Tôi viết năm phép tính trong `hand_calc.jpg`. Dưới đây là công thức đầy đủ để đối chiếu với ảnh. Ở dòng F1 trong ảnh, tôi ghi thiếu hệ số 2 ở tử số, nhưng kết quả cuối 0,73 được tính theo công thức đúng.
 
 1. Luôn đoán `ham`: sau bỏ trùng có 4.518 ham và 5.171 tin, nên accuracy = 4.518 / 5.171 = 0,8737 ≈ **0,87**.
 2. Sigmoid tại 0: σ(0) = 1 / (1 + e⁰) = 1 / 2 = **0,50**.

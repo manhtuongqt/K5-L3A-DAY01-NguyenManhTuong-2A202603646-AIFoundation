@@ -3,7 +3,7 @@
 - **MSSV:** 2A202603646
 - **Họ tên:** Nguyen Manh Tuong
 - **SEED:** 885 (thử thách #4)
-- **Dữ liệu:** UCI SMS Spam Collection, 5.574 dòng gốc; bỏ 403 bản ghi trùng còn 5.171. Train/validation/test = 3.621/775/775; SUB = 40 tin cân bằng. Mã bài làm dùng NumPy, PyTorch và MiniLM; không import `sklearn`.
+- **Dữ liệu:** Tôi dùng bộ UCI SMS Spam Collection. Sau khi bỏ 403 dòng trùng từ 5.574 dòng gốc, tôi còn 5.171 tin. Tôi chia train/validation/test thành 3.621/775/775 tin và lấy SUB 40 tin cân bằng để so sánh với LLM. Phần mã bài làm dùng NumPy, PyTorch và MiniLM, không import `sklearn`.
 
 ## 1. Bằng chứng
 
@@ -11,9 +11,11 @@
 | --- | --- |
 | [`day01_lab.ipynb`](day01_lab.ipynb) | Đã chạy hết, còn output, ghi dự đoán trước thí nghiệm và trả lời câu hỏi; 15/15 kiểm tra đạt. |
 | [`lab1_report.json`](lab1_report.json) | Sinh từ ô cuối; ghi seed, log dự đoán, kiểm tra và kết quả thực đo. |
-| [`hand_calc.jpg`](hand_calc.jpg) | Chưa có; học viên sẽ tự viết tay và bổ sung ảnh. [`hand_calc_steps.md`](hand_calc_steps.md) chỉ để đối chiếu phép tính. |
+| `hand_calc.jpg` | Tôi đã gửi ảnh viết tay trong cuộc trò chuyện; ảnh chưa được lưu thành tệp trong repository. [`hand_calc_steps.md`](hand_calc_steps.md) ghi lại công thức đúng để đối chiếu. |
 
-Phần 4 dùng `CKEY_API_KEY` trong `.env` bị Git bỏ qua hoặc Colab Secrets. API `https://api.xah.io/v1`, model lớn `gemini-3.8-flash`, model nhỏ `gemini-2.5-flash-lite`. Thời gian từng yêu cầu đã đo; cache ngoài repository chỉ để tiếp tục sau lỗi mạng và giữ thời gian đo ban đầu. Giá USD là **ước tính** từ số từ/0,75 token và giá CKEY niêm yết lúc chạy, không phải hóa đơn.
+Trong phần 4, tôi dùng `CKEY_API_KEY` từ `.env` bị Git bỏ qua hoặc Colab Secrets. API là `https://api.xah.io/v1`, với `gemini-3.8-flash` và `gemini-2.5-flash-lite`. Tôi đo thời gian từng yêu cầu. Cache nằm ngoài repository, chỉ dùng để tiếp tục khi mạng lỗi và giữ thời gian đo ban đầu. Chi phí USD được **ước tính** từ số từ/0,75 token và giá CKEY niêm yết lúc chạy; đây không phải hóa đơn.
+
+Trong ảnh tính tay tôi đã gửi, tôi ghi thiếu hệ số **2** ở tử số công thức F1. Kết quả **0,73** là đúng khi tính theo công thức đầy đủ: `F1 = 2 × precision × recall / (precision + recall) = 2 × 80 / (2 × 80 + 20 + 40) ≈ 0,7273`.
 
 ## 2. Test thường và SUB
 
@@ -28,7 +30,7 @@ Phần 4 dùng `CKEY_API_KEY` trong `.env` bị Git bỏ qua hoặc Colab Secret
 | CKEY 3.8 Flash zero-shot | — | 1.000 | 54119 | 0.07 | 0.00123 |
 | CKEY Flash-Lite few-shot | — | 1.000 | 5998 | 0.34 | 0.0281 |
 
-Ba hàng LLM chỉ đo SUB 40; p95 ở bảng là **ms** (tương ứng 7,308; 54,119; 5,998 giây). 3.8 Flash có **một output rỗng/không hợp lệ** được quy về ham và tình cờ đúng nhãn; F1 1.000 không chứng minh API ổn định. Few-shot tăng F1 Flash-Lite từ 0.976 lên 1.000, nhưng chi phí ước tính tăng khoảng 3,35 lần. Thông lượng là gọi tuần tự, không phải benchmark tải đồng thời; độ trễ máy cục bộ thay đổi theo tải.
+Ba hàng LLM chỉ đo trên SUB 40. p95 trong bảng là **ms**, tương ứng khoảng 7,3; 54,1; 6,0 giây. 3.8 Flash có **một output rỗng/không hợp lệ** được quy về ham và tình cờ đúng nhãn. Vì thế tôi không xem F1 1.000 là bằng chứng API luôn ổn định. Few-shot tăng F1 Flash-Lite từ 0.976 lên 1.000, nhưng chi phí ước tính tăng khoảng 3,35 lần. Tôi gọi API tuần tự, nên tin/s ở đây không phải benchmark tải đồng thời. Độ trễ mô hình cục bộ cũng có thể thay đổi theo tải máy.
 
 ## 3. Dự đoán sai
 
@@ -74,14 +76,16 @@ Giữ MiniLM, train/test và các tham số khác; chỉ thay `k`:
 
 Ba cấu hình LLM đều vượt SLA trực tiếp. Có thể dùng LLM ở luồng bất đồng bộ cho ca cần xem xét thêm, kèm kiểm tra độc lập và theo dõi lỗi API. Ngoại suy chi phí CKEY ước tính ở bảng cho 10 triệu tin/ngày × 30 ngày: Flash-Lite zero-shot khoảng **$2.520/tháng**, 3.8 Flash zero-shot **$369/tháng**, Flash-Lite few-shot **$8.434/tháng**. Giá 3.8 Flash của CKEY được niêm yết thấp hơn Flash-Lite lúc thử; số này chưa tính retry, overhead, thay đổi giá và không phải hóa đơn vận hành.
 
-## 7. AI log và tự kiểm chứng
+## 7. Tôi đã dùng AI như thế nào
 
-| Phần | Yêu cầu với AI | AI hỗ trợ | Kiểm chứng / giới hạn |
+| Phần | Việc tôi đã làm | AI hỗ trợ | Tôi kiểm tra lại |
 | --- | --- | --- | --- |
-| 0–3, thử thách | Hoàn thiện lab, không dùng `sklearn` trong mã bài làm | Viết TODO, dự đoán, giải thích và thử kNN | Chạy notebook 15/15 kiểm tra; đối chiếu output, hình và JSON. Học viên cần tự đọc để giải thích được mã. |
-| 4 | Kết nối CKEY bằng key trong `.env` bị Git bỏ qua | Cấu hình provider, wrapper, retry/cache và parser | Chạy 40 tin cho ba cấu hình, 50 ca cho hai prompt; đối chiếu output. Một output 3.8 Flash không hợp lệ; chi phí chỉ ước tính. |
-| 5–6 | Tổng hợp báo cáo | Viết bảng và phân tích từ kết quả | Đối chiếu F1, độ trễ với JSON và bộ khó; ảnh viết tay chưa được cung cấp. |
+| Phần 0–3 và thử thách | Tôi đã làm các TODO, ghi dự đoán và nhận xét trên Colab buổi sáng. Phiên Colab bị ngắt nên tôi nhờ dựng lại notebook để chạy tiếp. | Giải thích công thức, ý nghĩa của precision/recall/F1, loss, embedding và hỗ trợ khôi phục các ô mã theo bài tôi đang làm. | Tôi chạy lại notebook, kiểm tra 15/15 mục và đối chiếu kết quả với JSON; mã bài làm không import `sklearn`. |
+| Phần 4 | Tôi chọn CKEY, cung cấp key qua `.env` và xem kết quả phân loại. | Hỗ trợ kết nối API, xử lý lỗi mạng, đo độ trễ và giải thích vì sao F1, chi phí, p95 có thể khác nhau. | Tôi đối chiếu output 40 tin SUB và 50 ca khó. Một output của 3.8 Flash không hợp lệ; chi phí chỉ là ước tính. |
+| Báo cáo và tính tay | Tôi viết năm phép tính trên giấy và xem lại nhận xét sau khi có output. | Giải thích công thức và giúp sắp xếp số liệu thành bảng để tôi kiểm tra. | Tôi đối chiếu ảnh, notebook và `lab1_report.json`; ghi rõ chỗ thiếu hệ số 2 ở dòng F1 trong ảnh. |
 
 Tôi thấy F1 của lớp spam quan trọng hơn accuracy trên dữ liệu lệch lớp. Embedding cải thiện nhiều ca né từ nhưng vẫn bỏ sót spam viết như hội thoại. Prompt phòng thủ giúp một số ca khó nhưng có thể tăng false positive. Cần xem p95 từng tin, throughput, lỗi API và độ khó bộ test cùng nhau trước quyết định triển khai.
 
-**Việc còn thiếu để nộp đủ:** học viên thêm ảnh `report/individual/hand_calc.jpg` tự viết tay. Tên repository hiện có `L3A`, khác mẫu `L3` trong `SUBMISSION.md`; cần đổi tên nếu giáo viên yêu cầu khớp tuyệt đối.
+Repository của tôi dùng `L3A` theo hướng dẫn chia lớp của buổi học. Tôi giữ nguyên tên này khi nộp.
+
+Tôi sẽ thêm `hand_calc.jpg` vào thư mục này sau khi chuyển ảnh đã gửi trong cuộc trò chuyện thành tệp trên máy.
