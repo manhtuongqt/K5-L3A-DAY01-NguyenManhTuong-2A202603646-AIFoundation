@@ -11,11 +11,11 @@
 | --- | --- |
 | [`day01_lab.ipynb`](day01_lab.ipynb) | Đã chạy hết, còn output, ghi dự đoán trước thí nghiệm và trả lời câu hỏi; 15/15 kiểm tra đạt. |
 | [`lab1_report.json`](lab1_report.json) | Sinh từ ô cuối; ghi seed, log dự đoán, kiểm tra và kết quả thực đo. |
-| `hand_calc.jpg` | Tôi đã gửi ảnh viết tay trong cuộc trò chuyện; ảnh chưa được lưu thành tệp trong repository. [`hand_calc_steps.md`](hand_calc_steps.md) ghi lại công thức đúng để đối chiếu. |
+| [`hand_calc.jpg`](hand_calc.jpg) | Ảnh tôi viết tay năm phép tính. [`hand_calc_steps.md`](hand_calc_steps.md) ghi lại công thức đúng để đối chiếu. |
 
 Trong phần 4, tôi dùng `CKEY_API_KEY` từ `.env` bị Git bỏ qua hoặc Colab Secrets. API là `https://api.xah.io/v1`, với `gemini-3.8-flash` và `gemini-2.5-flash-lite`. Tôi đo thời gian từng yêu cầu. Cache nằm ngoài repository, chỉ dùng để tiếp tục khi mạng lỗi và giữ thời gian đo ban đầu. Chi phí USD được **ước tính** từ số từ/0,75 token và giá CKEY niêm yết lúc chạy; đây không phải hóa đơn.
 
-Trong ảnh tính tay tôi đã gửi, tôi ghi thiếu hệ số **2** ở tử số công thức F1. Kết quả **0,73** là đúng khi tính theo công thức đầy đủ: `F1 = 2 × precision × recall / (precision + recall) = 2 × 80 / (2 × 80 + 20 + 40) ≈ 0,7273`.
+Trong ảnh tính tay, tôi ghi thiếu hệ số **2** ở tử số công thức F1. Kết quả **0,73** là đúng khi tính theo công thức đầy đủ: `F1 = 2 × precision × recall / (precision + recall) = 2 × 80 / (2 × 80 + 20 + 40) ≈ 0,7273`.
 
 ## 2. Test thường và SUB
 
@@ -86,6 +86,4 @@ Ba cấu hình LLM đều vượt SLA trực tiếp. Có thể dùng LLM ở lu�
 
 Tôi thấy F1 của lớp spam quan trọng hơn accuracy trên dữ liệu lệch lớp. Embedding cải thiện nhiều ca né từ nhưng vẫn bỏ sót spam viết như hội thoại. Prompt phòng thủ giúp một số ca khó nhưng có thể tăng false positive. Cần xem p95 từng tin, throughput, lỗi API và độ khó bộ test cùng nhau trước quyết định triển khai.
 
-Repository của tôi dùng `L3A` theo hướng dẫn chia lớp của buổi học. Tôi giữ nguyên tên này khi nộp.
-
-Tôi sẽ thêm `hand_calc.jpg` vào thư mục này sau khi chuyển ảnh đã gửi trong cuộc trò chuyện thành tệp trên máy.
+Tôi dùng `L3A` trong tên repository theo hướng dẫn chia lớp của buổi học và giữ nguyên khi nộp.
